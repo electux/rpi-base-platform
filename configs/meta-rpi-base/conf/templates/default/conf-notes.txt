@@ -1,0 +1,18 @@
+### Yocto Base Platform for Raspberry Pi 3B+ (Scarthgap) ###
+
+You have successfully initialized the Yocto build environment.
+
+Common build targets:
+  - bitbake core-image-minimal   : Minimal bootable console image.
+  - bitbake core-image-base      : Standard console image with full hardware support.
+  - bitbake core-image-sato      : Graphical X11/Sato reference desktop image.
+
+Hardware Configuration (build/conf/local.conf):
+  - MACHINE: "raspberrypi3-64" (Default)
+  - UART/Serial Console is enabled by default.
+
+Tips:
+  - You can customize local.conf to change machines or configure features.
+  - To clean a build directory for a recipe:
+    $ bitbake -c cleanall <recipe-name>
+  - To save disk space, uncomment 'INHERIT += "rm_work"' in local.conf.
