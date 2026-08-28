@@ -1,6 +1,6 @@
-# Yocto Base Platform for Raspberry Pi (Scarthgap 5.0 LTS)
+# Yocto Base Platform for Raspberry Pi
 
-This repository serves as a **Yocto Base Platform (BSP / Board Support Package) Repository** for Raspberry Pi 3B+ (and other Raspberry Pi boards) using **Yocto 5.0 LTS (Scarthgap)**. 
+This repository serves as a **Yocto Base Platform (BSP / Board Support Package) Repository** for Raspberry Pi 3B+ (and other Raspberry Pi boards) using **Yocto 5.0 LTS (Scarthgap)**.
 
 It is designed to be:
 1. **Standalone Build Environment**: Clone it and build a base console/GUI image directly for testing.
@@ -14,8 +14,12 @@ It is designed to be:
 rpi-base-platform/
 ├── configs/                  # Base configuration templates (TEMPLATECONF)
 │   ├── bblayers.conf.sample  # Ported layers configured with ##OEROOT## relative paths
-│   ├── local.conf.sample     # Default hardware configurations for RPi 3B+ (64-bit)
-│   └── conf-notes.txt        # Welcome messages and helper commands on initialization
+│   ├── local.conf.sample     # Default configuration template
+│   ├── conf-notes.txt        # Welcome messages and helper commands on initialization
+│   └── meta-rpi-base/        # Base hardware BSP layer
+│       ├── conf/
+│       │   └── layer.conf    # Layer configuration (defines default ENABLE_UART, GPU_MEM)
+│       └── recipes-core/     # Contains dummy recipes to satisfy BitBake requirements
 ├── layers/                   # Upstream Yocto layers managed as Git Submodules
 │   ├── poky/                 # Core Yocto metadata and BitBake (scarthgap)
 │   ├── meta-openembedded/    # Extra recipes (oe, python, networking, etc.) (scarthgap)
@@ -82,8 +86,15 @@ Run BitBake to build one of the available console-only reference images:
   bitbake core-image-full-cmdline
   ```
 
+### Step 4: Login to the Image
+Once the image is built and flashed to an SD card:
+* **Username**: `root`
+* **Password**: No password (leave blank and press Enter).
+
+This is configured globally via `debug-tweaks` in `local.conf.sample` for easier development.
 
 ---
+
 
 ## 2. Integration into a Parent Product Repository
 
@@ -159,8 +170,8 @@ source submodules/rpi-base-platform/layers/poky/oe-init-build-env "build-product
 ## Customization Tips (local.conf)
 
 In your `local.conf` (standalone or product-specific):
-* **Enable UART/Serial Console** (Default: Enabled):
-  `ENABLE_UART = "1"` is configured so that you can interact with the Pi using a USB-to-TTL serial adapter on pins 8 & 10.
+* **UART/Serial Console & GPU Memory** (Default: Enabled):
+  `ENABLE_UART = "1"` and `GPU_MEM = "128"` are configured globally as default values in `meta-rpi-base`'s `conf/layer.conf` using weak assignments (`??=`). You can override them in your `local.conf` (e.g., `ENABLE_UART = "0"` or `GPU_MEM = "64"`) if needed.
 * **Reduce Disk Space consumption**:
   Yocto builds require significant space (50GB+). You can uncomment the line:
   `INHERIT += "rm_work"`
@@ -190,4 +201,3 @@ To fix this:
   # 2. Apply the configuration immediately
   sudo sysctl -p /etc/sysctl.d/60-apparmor-namespace.conf
   ```
-
