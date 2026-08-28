@@ -37,19 +37,5 @@ BB_DISKMON_DIRS ??= "\
 # DL_DIR ?= "${TOPDIR}/downloads"
 # SSTATE_DIR ?= "${TOPDIR}/sstate-cache"
 
-# =========================================================================
-# Raspberry Pi Specific Settings (meta-raspberrypi)
-# =========================================================================
-
-# Enable serial console/UART for hardware debugging
-ENABLE_UART = "1"
-
-# GPU Memory split (in Megabytes)
-# 64MB or 128MB is common for headless systems. Increase if running UI/OpenGL.
-GPU_MEM = "128"
-
-# Optional: Add licensing exceptions if you require commercial codecs (e.g. for hardware accelerated video)
-# LICENSE_FLAGS_ACCEPTED = "commercial"
-
 # Configuration Version (DO NOT EDIT)
 CONF_VERSION = "2"
